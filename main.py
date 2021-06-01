@@ -13,10 +13,9 @@ def mainTurnLeft():
     rockL()
 
 def turnAround():
-    goTime = 1
+    goTime = 0.5
     checkStep = 0.1
 
-    pasBy = False
     gogo()
     time.sleep(goTime)
     rockR()
