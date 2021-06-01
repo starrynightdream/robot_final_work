@@ -24,4 +24,12 @@ $(() =>{
             info.text(data.stdout);
         });
     });
+    $('#stopscript').on('click', (e)=>{
+        // 调用stop
+        $.post('/runPy',{
+            pyFile: 'stopSctipt'
+        }, (data)=>{
+            info.text(data.stdout);
+        });
+    });
 });

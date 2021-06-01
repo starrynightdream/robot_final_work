@@ -3,9 +3,9 @@ const cp = require('child_process');
 const express = require('express');
 
 const port = 3000;
-const main1FilePath = '../test.py';
+const main1FilePath = '../main.py';
 const main2FilePath = '../test.py';
-const stopFilePath = '../test.py';
+const stopFilePath = '../stop.py';
 
 const app = express();
 let pyThread = null;
@@ -31,7 +31,9 @@ app.post('/runPy', (req, res)=>{
         case 'stop':
 
             if (pyThread){
+                pyThread.unref();
                 pyThread.kill();
+                cp.spawn('kill', [pyThread.pid])
 
                 res.json({
                     stdout: 'stop success'

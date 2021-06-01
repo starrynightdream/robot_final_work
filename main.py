@@ -13,8 +13,8 @@ def mainTurnLeft():
     rockL()
 
 def turnAround():
-    goTime = 0.5
-    checkStep = 0.1
+    goTime = 0.2
+    checkStep = 0.01
 
     gogo()
     time.sleep(goTime)
@@ -33,6 +33,9 @@ def turnAround():
         time.sleep(checkStep)
         l, r = getIR()
 
+    back()
+    time.sleep(checkStep)
+    stop()
     # rockR()
     # time.sleep(turnAroundTime)
     # stop()
@@ -42,7 +45,7 @@ def mainGoGo():
 
 if __name__ == "__main__":
     time.sleep(0.1)
-    speed(50)
+    speed(100)
 
     try:
         while not Ending:

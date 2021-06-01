@@ -47,6 +47,12 @@ def speed(np):
     pwmA.ChangeDutyCycle(rool_speed)
     pwmB.ChangeDutyCycle(rool_speed)
 
+def engStart():
+    global rool_speed
+
+    pwmA.start(rool_speed)
+    pwmB.start(rool_speed)
+
 def pwmEnd():
 
     pwmA.stop()
@@ -230,6 +236,7 @@ def switch_it_to(to_what):
 '''
 if __name__ == "__main__":
     pass
+
 
     # q = 'q'
     # # led_index = 0
