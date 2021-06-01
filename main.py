@@ -62,6 +62,6 @@ if __name__ == "__main__":
             # stop()
             # time.sleep( 0.001)
             # time.sleep( testTime)
-    except KeyboardInterrupt:
+    finally:
         stop()
         pwmEnd()

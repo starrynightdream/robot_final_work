@@ -8,6 +8,7 @@ const main2FilePath = '../test.py';
 const stopFilePath = '../test.py';
 
 const app = express();
+let pyThread = null;
 
 app.use(express.json());
 app.use(express.urlencoded({
@@ -28,15 +29,35 @@ app.post('/runPy', (req, res)=>{
             file = main2FilePath;
             break;
         case 'stop':
+
+            if (pyThread){
+                pyThread.kill();
+
+                res.json({
+                    stdout: 'stop success'
+                });
+
+                return;
+            } else{
+
+                res.json({
+                    stdout: 'no script running'
+                });
+                return;
+            }
+            break;
+        case 'stopSctipt':
             file = stopFilePath;
             break;
+
     }
-    if (file)
+    if (!file)
         res.json({
             stdout: 'no such file'
         });
     
-    let pyThread = cp.exec(`python ${ path.join(__dirname, file)}`, (err, stdout, stderr) =>{
+    const command = `python ${ path.join(__dirname, file)}`;
+    pyThread = cp.exec(command, (err, stdout, stderr) =>{
         if (err){
             console.error(err);
             res.json({
@@ -49,13 +70,15 @@ app.post('/runPy', (req, res)=>{
         console.log('错误#');
         console.log(stderr);
 
-        res.json({
-            stdout
-        });
+    });
+    res.json({
+        stdout: `run ${key}`
     });
 
     pyThread.on('exit', (code) =>{
         // 可做退出处理
+        console.log(`exit thread ${file}`);
+        pyThread = null;
     });
 });
 
