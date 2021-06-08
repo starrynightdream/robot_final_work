@@ -8,7 +8,7 @@ const main2FilePath = '../test.py';
 const stopFilePath = '../stop.py';
 
 const app = express();
-let pyThread = null;
+const threadObj = {};
 
 app.use(express.json());
 app.use(express.urlencoded({
@@ -30,25 +30,6 @@ app.post('/runPy', (req, res)=>{
             break;
         case 'stop':
 
-            if (pyThread){
-                pyThread.unref();
-                pyThread.kill();
-                cp.spawn('kill', [pyThread.pid])
-
-                res.json({
-                    stdout: 'stop success'
-                });
-
-                return;
-            } else{
-
-                res.json({
-                    stdout: 'no script running'
-                });
-                return;
-            }
-            break;
-        case 'stopSctipt':
             file = stopFilePath;
             break;
 
@@ -58,29 +39,59 @@ app.post('/runPy', (req, res)=>{
             stdout: 'no such file'
         });
     
-    const command = `python ${ path.join(__dirname, file)}`;
-    pyThread = cp.exec(command, (err, stdout, stderr) =>{
-        if (err){
-            console.error(err);
-            res.json({
-                stdout: 'err'
-            });
-            return;
-        }
-        console.log('输出>');
-        console.log(stdout);
-        console.log('错误#');
-        console.log(stderr);
+    
+    // const command = `python ${ path.join(__dirname, file)}`;
 
+    let pt = cp.spawn('python', [ path.join(__dirname, file)]);
+
+    pt.stdout.on('data', (data) =>{
+        console.log('stdout # ' , data);
     });
+
+    pt.on('close', (code) =>{
+        console.log(`thread ${key} close ${code}`);
+    });
+    
+    pt.on('exit', (code) =>{
+        console.log(`thread ${key} exit ${code}`);
+        threadObj[key] = null;
+    });
+
+    threadObj[key] = pt;
+
     res.json({
         stdout: `run ${key}`
     });
+});
 
-    pyThread.on('exit', (code) =>{
-        // 可做退出处理
-        console.log(`exit thread ${file}`);
-        pyThread = null;
+app.post('/kill', (req, res) =>{
+    let key = req.body.pyFile.trim();
+    let file = '';
+    switch(key)
+    {
+        case 'main1':
+            file = main1FilePath;
+            break;
+        case 'main2':
+            file = main2FilePath;
+            break;
+        case 'stop':
+            file = stopFilePath;
+            break;
+
+    }
+    if (!(file && threadObj[key])){
+        res.json({
+            stdout: 'no such thread'
+        });
+        return ;
+    }
+   
+    threadObj[key].kill();
+    threadObj[key] = null;
+
+    res.json({
+        stdout: 'kill success'
     });
 });
 

@@ -1,34 +1,21 @@
 $(() =>{
     const info = $('#info');
-    $('#main1').on('click', (e)=>{
-        // 调用main1
-        $.post('/runPy',{
-            pyFile: 'main1'
-        }, (data)=>{
+
+    $('.runBut').on('click', (e) =>{
+        console.log('run', e.target.name);
+
+        $.post('/runPy', {
+            pyFile: e.target.name
+        }, (data) =>{
             info.text(data.stdout);
         });
     });
-    $('#main2').on('click', (e)=>{
-        // 调用main2
-        $.post('/runPy',{
-            pyFile: 'main2'
-        }, (data)=>{
-            info.text(data.stdout);
-        });
-    });
-    $('#stop').on('click', (e)=>{
-        // 调用stop
-        $.post('/runPy',{
-            pyFile: 'stop'
-        }, (data)=>{
-            info.text(data.stdout);
-        });
-    });
-    $('#stopscript').on('click', (e)=>{
-        // 调用stop
-        $.post('/runPy',{
-            pyFile: 'stopSctipt'
-        }, (data)=>{
+
+    $('.killBut').on('click', (e) =>{
+
+        $.post('/kill', {
+            pyFile: e.target.name
+        }, (data) =>{
             info.text(data.stdout);
         });
     });
