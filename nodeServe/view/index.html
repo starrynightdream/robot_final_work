@@ -12,7 +12,17 @@
                 info
             </p>
         </div>
+        <% for (let file of files){ %>
         <div class="buttonSet">
+            <button class="runBut" name="<%= file %>">
+                <h1><%= file %></h1>
+            </button>
+            <button class="killBut" name="<%= file %>">
+                <h1><%= file %></h1>
+            </button>
+        </div>
+        <% } %>
+        <!-- <div class="buttonSet">
             <button class="runBut" name="main1">
                 <h1>main1</h1>
             </button>
@@ -35,6 +45,6 @@
             <button class="killBut" name="stop">
                 <h1>stop</h1>
             </button>
-        </div>
+        </div> -->
     </body>
 </html>

@@ -7,8 +7,15 @@ const main1FilePath = '../main.py';
 const main2FilePath = '../test.py';
 const stopFilePath = '../stop.py';
 
+const ejs = require('ejs')
+
+
 const app = express();
 const threadObj = {};
+
+app.set('views', path.join(__dirname, '/view')); 
+app.engine('html', ejs.renderFile);
+app.set('view engine', 'html');
 
 app.use(express.json());
 app.use(express.urlencoded({
@@ -29,15 +36,15 @@ app.post('/runPy', (req, res)=>{
             file = main2FilePath;
             break;
         case 'stop':
-
             file = stopFilePath;
             break;
-
     }
-    if (!file)
+    if (!file){
         res.json({
             stdout: 'no such file'
         });
+        return;
+    }
     
     
     // const command = `python ${ path.join(__dirname, file)}`;
@@ -96,7 +103,8 @@ app.post('/kill', (req, res) =>{
 });
 
 app.use('/', (req, res)=>{
-    res.sendFile( path.join(__dirname, '/view/index.html'));
+    // 需要对文件夹内的python脚本做统计，而后再返回渲染的页面
+    res.render('index', {files: ['main1', 'main2', 'stop']});
 });
 
 app.listen(port, ()=>{

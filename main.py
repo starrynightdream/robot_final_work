@@ -29,7 +29,7 @@ def turnAround():
         time.sleep(checkStep)
         l, r = getIR()
     
-    while not l:
+    while not (l or r):
         time.sleep(checkStep)
         l, r = getIR()
 
