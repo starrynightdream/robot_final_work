@@ -65,6 +65,12 @@ app.post('/runPy', (req, res)=>{
     
     
     // const command = `python ${ path.join(__dirname, file)}`;
+    // 特化对于进程进行停止的操作，运行一个进程时会杀掉所有进程
+    for (let k of Object.keys(threadObj)){
+        if (threadObj[k] && threadObj[k].kill)
+            threadObj[k].kill();
+        threadObj[k] = null;
+    }
 
     let pt = cp.spawn('python', [ path.join(__dirname, file)]);
 
